@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +13,6 @@
             background-size: cover;
             color: #333;
         }
-
         .container {
             width: 80%;
             margin: auto;
@@ -24,7 +22,6 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
         header {
             background: #444;
             color: #fff;
@@ -33,36 +30,28 @@
             border-bottom: #ff6347 3px solid;
             text-align: center;
         }
-
         header a {
             color: #fff;
             text-decoration: none;
             text-transform: uppercase;
             font-size: 18px;
         }
-
         header h1 {
             margin: 0;
             font-size: 36px;
         }
-
         header nav {
             margin-top: 10px;
         }
-
-        header .highlight,
-        header .current a {
+        header .highlight, header .current a {
             color: #ff6347;
         }
-
         header a:hover {
             color: #ccc;
         }
-
         #main {
             padding: 20px;
         }
-
         .button_1 {
             height: 50px;
             background: #ff6347;
@@ -78,12 +67,10 @@
             cursor: pointer;
             transition: background 0.3s, box-shadow 0.3s;
         }
-
         .button_1:hover {
             background: #e5533d;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
-
         .dark {
             padding: 15px;
             background: #333;
@@ -92,24 +79,20 @@
             margin-bottom: 10px;
             border-radius: 5px;
         }
-
         h2 {
             font-size: 24px;
             color: #ff6347;
         }
-
         pre {
-            background: #1d7e07;
+            background: #f4f4f4;
             padding: 10px;
             border-radius: 5px;
             overflow-x: auto;
         }
-
         .payment-details {
             display: none;
             margin-top: 20px;
         }
-
         .payment-details input,
         .payment-details select {
             width: 100%;
@@ -119,11 +102,9 @@
             border: 1px solid #ccc;
             box-sizing: border-box;
         }
-
         .payment-details input[title] {
             position: relative;
         }
-
         .payment-details input[title]:hover:after {
             content: attr(title);
             position: absolute;
@@ -135,42 +116,12 @@
             border-radius: 5px;
             white-space: nowrap;
         }
-
         .amount-slider {
             width: 80%;
             margin: 10px 0;
         }
-
-        .recipient-details {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .recipient-details input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .cheque-details,
-        .batch-file-upload {
-            display: none;
-            margin-top: 20px;
-        }
-
-        .cheque-details input,
-        .batch-file-upload input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
     </style>
 </head>
-
 <body>
     <header>
         <div class="container">
@@ -200,33 +151,25 @@
             <!-- Credit Card Details -->
             <div id="creditCardDetails">
                 <input type="text" id="cardNumber" placeholder="Card Number" title="Enter your credit card number.">
-                <input type="text" id="expiryMonth" placeholder="Expiry Month (MM)"
-                    title="Enter the expiry month of your credit card.">
-                <input type="text" id="expiryYear" placeholder="Expiry Year (YYYY)"
-                    title="Enter the expiry year of your credit card.">
-                <input type="text" id="cvc" placeholder="CVC"
-                    title="Enter the CVC code found on the back of your credit card.">
+                <input type="text" id="expiryMonth" placeholder="Expiry Month (MM)" title="Enter the expiry month of your credit card.">
+                <input type="text" id="expiryYear" placeholder="Expiry Year (YYYY)" title="Enter the expiry year of your credit card.">
+                <input type="text" id="cvc" placeholder="CVC" title="Enter the CVC code found on the back of your credit card.">
             </div>
             <!-- PayPal Details -->
             <div id="paypalDetails">
-                <input type="email" id="paypalEmail" placeholder="PayPal Email"
-                    title="Enter your PayPal email address.">
+                <input type="email" id="paypalEmail" placeholder="PayPal Email" title="Enter your PayPal email address.">
             </div>
             <!-- Bank Transfer Details -->
             <div id="bankTransferDetails">
-                <input type="text" id="accountNumber" placeholder="Account Number"
-                    title="Enter your bank account number.">
+                <input type="text" id="accountNumber" placeholder="Account Number" title="Enter your bank account number.">
                 <input type="text" id="sortCode" placeholder="Sort Code" title="Enter your bank's sort code.">
                 <input type="text" id="iban" placeholder="IBAN" title="Enter your IBAN number.">
                 <!-- Recipient Account Details -->
                 <div class="recipient-details">
                     <h2>Recipient Account Details</h2>
-                    <input type="text" id="recipientAccountNumber" placeholder="Recipient Account Number"
-                        title="Enter the recipient's bank account number.">
-                    <input type="text" id="recipientSortCode" placeholder="Recipient Sort Code"
-                        title="Enter the recipient's bank sort code.">
-                    <input type="text" id="recipientIBAN" placeholder="Recipient IBAN"
-                        title="Enter the recipient's IBAN number.">
+                    <input type="text" id="recipientAccountNumber" placeholder="Recipient Account Number" title="Enter the recipient's bank account number.">
+                    <input type="text" id="recipientSortCode" placeholder="Recipient Sort Code" title="Enter the recipient's bank sort code.">
+                    <input type="text" id="recipientIBAN" placeholder="Recipient IBAN" title="Enter the recipient's IBAN number.">
                 </div>
             </div>
             <!-- Cheque Details -->
@@ -238,285 +181,262 @@
             </div>
             <!-- Batch File Upload -->
             <div id="batchFileUpload" class="batch-file-upload">
-                <input type="file" id="batchFile" accept=".csv, .json, .xml"
-                    title="Upload a batch file (CSV, JSON, XML).">
+                <input type="file" id="batchFile" accept=".csv, .json, .xml" title="Upload a batch file (CSV, JSON, XML).">
             </div>
             <button class="button_1" id="submitPayment">Submit Payment</button>
-        </div>
-        <div id="paymentInfo" class="dark">
-            <h2>Payment Type Information</h2>
-            <p>Select a payment type to see more information.</p>
-        </div>
-        <div id="transactionStatus" class="dark" style="display:none;">
-            <h2>Transaction Status</h2>
-            <input type="text" id="transactionId" placeholder="Enter transaction ID"
-                style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc;">
-            <button class="button_1" id="checkStatus">Check Status</button>
-            <div id="statusResult"></div>
-        </div>
-    </section>
-    <script>
-        const paymentTypes = ["Credit Card", "PayPal", "Bank Transfer", "Cheque", "Batch File"];
-        const paymentInfo = {
-            "Credit Card": {
-                description: "Credit cards are used for various transactions online and offline. They provide a convenient way to pay for goods and services.",
-                examples: {
-                    correct: {
-                        cardNumber: "4111111111111111",
-                        expiryMonth: "12",
-                        expiryYear: "2025",
-                        cvc: "123",
-                        amount: "100.00"
+            <div id="paymentInfo" class="dark">
+                <h2>Payment Type Information</h2>
+                <p>Select a payment type to see more information.</p>
+            </div>
+            <div id="transactionStatus" class="dark" style="display:none;">
+                <h2>Transaction Status</h2>
+                <input type="text" id="transactionId" placeholder="Enter transaction ID" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc;">
+                <button class="button_1" id="checkStatus">Check Status</button>
+                <div id="statusResult"></div>
+            </div>
+        </section>
+        <script>
+            const paymentInfo = {
+                "Credit Card": {
+                    description: "Credit cards are used for various transactions online and offline. They provide a convenient way to pay for goods and services.",
+                    examples: {
+                        correct: {
+                            cardNumber: "4111111111111111",
+                            expiryMonth: "12",
+                            expiryYear: "2025",
+                            cvc: "123",
+                            amount: "100.00"
+                        },
+                        incorrect: {
+                            cardNumber: "1234567890123456",
+                            expiryMonth: "13",
+                            expiryYear: "2020",
+                            cvc: "12a",
+                            amount: "ten"
+                        }
                     },
-                    incorrect: {
-                        cardNumber: "1234567890123456",
-                        expiryMonth: "13",
-                        expiryYear: "2020",
-                        cvc: "12a",
-                        amount: "ten"
-                    }
+                    apiTest: `{
+                        "type": "Credit Card",
+                        "details": {
+                            "cardNumber": "4111111111111111",
+                            "expiryMonth": "12",
+                            "expiryYear": "2025",
+                            "cvc": "123",
+                            "amount": "100.00"
+                        }
+                    }`
                 },
-                apiTest: `{
-                    "type": "Credit Card",
-                    "details": {
-                        "cardNumber": "4111111111111111",
-                        "expiryMonth": "12",
-                        "expiryYear": "2025",
-                        "cvc": "123",
-                        "amount": "100.00"
-                    }
-                }`
-            },
-            "PayPal": {
-                description: "PayPal is an online payment system that allows users to transfer money and make payments securely over the Internet.",
-                examples: {
-                    correct: {
-                        email: "test@example.com",
-                        amount: "100.00"
+                "PayPal": {
+                    description: "PayPal is an online payment system that allows users to transfer money and make payments securely over the Internet.",
+                    examples: {
+                        correct: {
+                            email: "test@example.com",
+                            amount: "100.00"
+                        },
+                        incorrect: {
+                            email: "testexample.com",
+                            amount: "ten"
+                        }
                     },
-                    incorrect: {
-                        email: "testexample.com",
-                        amount: "ten"
-                    }
+                    apiTest: `{
+                        "type": "PayPal",
+                        "details": {
+                            "email": "test@example.com",
+                            "amount": "100.00"
+                        }
+                    }`
                 },
-                apiTest: `{
-                    "type": "PayPal",
-                    "details": {
-                        "email": "test@example.com",
-                        "amount": "100.00"
-                    }
-                }`
-            },
-            "Bank Transfer": {
-                description: "Bank transfers involve transferring money directly from one bank account to another. It is often used for larger transactions. An IBAN (International Bank Account Number) is a standard international numbering system used to identify bank accounts across borders. It includes a country code, check digits, and a bank account number.",
-                examples: {
-                    correct: {
-                        accountNumber: "12345678",
-                        sortCode: "123456",
-                        IBAN: "GB82WEST12345698765432",
-                        amount: "1000.00"
+                "Bank Transfer": {
+                    description: "Bank transfers involve transferring money directly from one bank account to another. It is often used for larger transactions. An IBAN (International Bank Account Number) is a standard international numbering system used to identify bank accounts across borders. It includes a country code, check digits, and a bank account number.",
+                    examples: {
+                        correct: {
+                            accountNumber: "12345678",
+                            sortCode: "123456",
+                            IBAN: "GB82WEST12345698765432",
+                            amount: "1000.00"
+                        },
+                        incorrect: {
+                            accountNumber: "1234",
+                            sortCode: "12",
+                            IBAN: "GB82 WEST 1234 5698 7654",
+                            amount: "one thousand"
+                        }
                     },
-                    incorrect: {
-                        accountNumber: "1234",
-                        sortCode: "12",
-                        IBAN: "GB82 WEST 1234 5698 7654",
-                        amount: "one thousand"
-                    }
+                    apiTest: `{
+                        "type": "Bank Transfer",
+                        "details": {
+                            "accountNumber": "12345678",
+                            "sortCode": "123456",
+                            "IBAN": "GB82WEST12345698765432",
+                            "amount": "1000.00"
+                        }
+                    }`
                 },
-                apiTest: `{
-                    "type": "Bank Transfer",
-                    "details": {
-                        "accountNumber": "12345678",
-                        "sortCode": "123456",
-                        "IBAN": "GB82WEST12345698765432",
-                        "amount": "1000.00"
-                    }
-                }`
-            },
-            "Cheque": {
-                description: "Cheques are a traditional payment method where a written order directs a bank to pay a specific amount of money from one account to another. They are often used for larger or formal transactions.",
-                examples: {
-                    correct: {
-                        chequeNumber: "100200300",
-                        chequeBankCode: "123456",
-                        chequeAmount: "1500.00"
+                "Cheque": {
+                    description: "Cheques are a traditional payment method where a written order directs a bank to pay a specific amount of money from one account to another. They are often used for larger or formal transactions.",
+                    examples: {
+                        correct: {
+                            chequeNumber: "100200300",
+                            chequeBankCode: "123456",
+                            chequeAmount: "1500.00"
+                        },
+                        incorrect: {
+                            chequeNumber: "1002",
+                            chequeBankCode: "123",
+                            chequeAmount: "fifteen hundred"
+                        }
                     },
-                    incorrect: {
-                        chequeNumber: "1002",
-                        chequeBankCode: "123",
-                        chequeAmount: "fifteen hundred"
-                    }
+                    apiTest: `{
+                        "type": "Cheque",
+                        "details": {
+                            "chequeNumber": "100200300",
+                            "chequeBankCode": "123456",
+                            "chequeAmount": "1500.00"
+                        }
+                    }`
                 },
-                apiTest: `{
-                    "type": "Cheque",
-                    "details": {
-                        "chequeNumber": "100200300",
-                        "chequeBankCode": "123456",
-                        "chequeAmount": "1500.00"
-                    }
-                }`
-            },
-            "Batch File": {
-                description: "Batch file processing allows you to process multiple transactions at once by uploading a file containing the transaction details. Supported formats include CSV, JSON, and XML.",
-                examples: {
-                    correct: `CSV:
-"transactionType","details"
-"Credit Card","{\\"cardNumber\\":\\"4111111111111111\\",\\"expiryMonth\\":\\"12\\",\\"expiryYear\\":\\"2025\\",\\"cvc\\":\\"123\\",\\"amount\\":\\"100.00\\"}"
-JSON:
-[
-    {
-        "type": "Credit Card",
-        "details": {
-            "cardNumber": "4111111111111111",
-            "expiryMonth": "12",
-            "expiryYear": "2025",
-            "cvc": "123",
-            "amount": "100.00"
-        }
-    },
-    {
-        "type": "PayPal",
-        "details": {
-            "email": "test@example.com",
-            "amount": "100.00"
-        }
-    }
-]
-XML:
-<transactions>
-    <transaction>
-        <type>Credit Card</type>
-        <details>
-            <cardNumber>4111111111111111</cardNumber>
-            <expiryMonth>12</expiryMonth>
-            <expiryYear>2025</expiryYear>
-            <cvc>123</cvc>
-            <amount>100.00</amount>
-        </details>
-    </transaction>
-    <transaction>
-        <type>PayPal</type>
-        <details>
-            <email>test@example.com</email>
-            <amount>100.00</amount>
-        </details>
-    </transaction>
-</transactions>`,
-                    incorrect: `CSV:
-"transactionType","details"
-"Credit Card","cardNumber: 1234, expiryMonth: 13, expiryYear: 2020, cvc: abc, amount: ten"
-JSON:
-[
-    {
-        "type": "Credit Card",
-        "details": {
-            "cardNumber": "1234",
-            "expiryMonth": "13",
-            "expiryYear": "2020",
-            "cvc": "abc",
-            "amount": "ten"
-        }
-    }
-]
-XML:
-<transactions>
-    <transaction>
-        <type>Credit Card</type>
-        <details>
-            <cardNumber>1234</cardNumber>
-            <expiryMonth>13</expiryMonth>
-            <expiryYear>2020</expiryYear>
-            <cvc>abc</cvc>
-            <amount>ten</amount>
-        </details>
-    </transaction>
-</transactions>`
-                },
-                apiTest: `{
-                    "type": "Batch File",
-                    "details": {
-                        "fileType": "csv",
-                        "fileContent": "transactionType,details\\nCredit Card,\\"{\\\\\\"cardNumber\\\\\\":\\\\\\"4111111111111111\\\\\\",\\\\\\"expiryMonth\\\\\\":\\\\\\"12\\\\\\",\\\\\\"expiryYear\\\\\\":\\\\\\"2025\\\\\\",\\\\\\"cvc\\\\\\":\\\\\\"123\\\\\\",\\\\\\"amount\\\\\\":\\\\\\"100.00\\\\\\"}\\""
-                    }
-                }`
+                "Batch File": {
+                    description: "Batch file processing allows you to process multiple transactions at once by uploading a file containing the transaction details. Supported formats include CSV, JSON, and XML.",
+                    examples: {
+                        correct: `CSV:
+    "transactionType","details"
+    "Credit Card","{\\"cardNumber\\":\\"4111111111111111\\",\\"expiryMonth\\":\\"12\\",\\"expiryYear\\":\\"2025\\",\\"cvc\\":\\"123\\",\\"amount\\":\\"100.00\\"}"
+    JSON:
+    [
+        {
+            "type": "Credit Card",
+            "details": {
+                "cardNumber": "4111111111111111",
+                "expiryMonth": "12",
+                "expiryYear": "2025",
+                "cvc": "123",
+                "amount": "100.00"
             }
-        };
-
-        async function fetchPaymentTypes() {
-            const paymentTypeSelect = document.getElementById('paymentType');
-            paymentTypes.forEach(type => {
-                const option = document.createElement('option');
-                option.value = type;
-                option.text = type;
-                paymentTypeSelect.add(option);
-            });
+        },
+        {
+            "type": "PayPal",
+            "details": {
+                "email": "test@example.com",
+                "amount": "100.00"
+            }
         }
-
-        function updatePaymentInfo() {
-            const paymentType = document.getElementById('paymentType').value;
-            const info = paymentInfo[paymentType];
-
-            document.getElementById('creditCardDetails').style.display = 'none';
-            document.getElementById('paypalDetails').style.display = 'none';
-            document.getElementById('bankTransferDetails').style.display = 'none';
-            document.getElementById('chequeDetails').style.display = 'none';
-            document.getElementById('batchFileUpload').style.display = 'none';
-            document.getElementById('paymentDetails').style.display = 'block';
-
-            if (info) {
-                if (paymentType === "Credit Card") {
-                    document.getElementById('creditCardDetails').style.display = 'block';
-                } else if (paymentType === "PayPal") {
-                    document.getElementById('paypalDetails').style.display = 'block';
-                } else if (paymentType === "Bank Transfer") {
-                    document.getElementById('bankTransferDetails').style.display = 'block';
-                    document.querySelector('.recipient-details').style.display = 'block';
-                } else if (paymentType === "Cheque") {
-                    document.getElementById('chequeDetails').style.display = 'block';
-                } else if (paymentType === "Batch File") {
-                    document.getElementById('batchFileUpload').style.display = 'block';
+    ]
+    XML:
+    <transactions>
+        <transaction>
+            <type>Credit Card</type>
+            <details>
+                <cardNumber>4111111111111111</cardNumber>
+                <expiryMonth>12</expiryMonth>
+                <expiryYear>2025</expiryYear>
+                <cvc>123</cvc>
+                <amount>100.00</amount>
+            </details>
+        </transaction>
+        <transaction>
+            <type>PayPal</type>
+            <details>
+                <email>test@example.com</email>
+                <amount>100.00</amount>
+            </details>
+        </transaction>
+    </transactions>`,
+                        incorrect: `CSV:
+    "transactionType","details"
+    "Credit Card","cardNumber: 1234, expiryMonth: 13, expiryYear: 2020, cvc: abc, amount: ten"
+    JSON:
+    [
+        {
+            "type": "Credit Card",
+            "details": {
+                "cardNumber": "1234",
+                "expiryMonth": "13",
+                "expiryYear": "2020",
+                "cvc": "abc",
+                "amount": "ten"
+            }
+        }
+    ]
+    XML:
+    <transactions>
+        <transaction>
+            <type>Credit Card</type>
+            <details>
+                <cardNumber>1234</cardNumber>
+                <expiryMonth>13</expiryMonth>
+                <expiryYear>2020</expiryYear>
+                <cvc>abc</cvc>
+                <amount>ten</amount>
+            </details>
+        </transaction>
+    </transactions>`
+                    },
+                    apiTest: `{
+                        "type": "Batch File",
+                        "details": {
+                            "fileType": "csv",
+                            "fileContent": "transactionType,details\\nCredit Card,\\"{\\\\\\"cardNumber\\\\\\":\\\\\\"4111111111111111\\\\\\",\\\\\\"expiryMonth\\\\\\":\\\\\\"12\\\\\\",\\\\\\"expiryYear\\\\\\":\\\\\\"2025\\\\\\",\\\\\\"cvc\\\\\\":\\\\\\"123\\\\\\",\\\\\\"amount\\\\\\":\\\\\\"100.00\\\\\\"}\\""
+                        }
+                    }`
                 }
-
-                const infoDiv = document.getElementById('paymentInfo');
-                infoDiv.innerHTML = `
-                    <h2>${paymentType} Information</h2>
-                    <p>${info.description}</p>
-                    <div>
-                        <h3>Correct Example</h3>
-                        <pre>${JSON.stringify(info.examples.correct, null, 2)}</pre>
-                        <h3>Incorrect Example</h3>
-                        <pre>${JSON.stringify(info.examples.incorrect, null, 2)}</pre>
-                        <h3>API Test Data</h3>
-                        <pre>${info.apiTest}</pre>
-                        <h3>Postman/Insomnia Example</h3>
-                        <pre>URL: https://payment-poc-production.up.railway.app/api/validate-payment</pre>
-                        <pre>Method: POST</pre>
-                        <pre>Body: ${info.apiTest}</pre>
-                    </div>
-                `;
+            };
+    
+            async function fetchPaymentTypes() {
+                const response = await fetch('/api/payment-types');
+                const paymentTypes = await response.json();
+                const paymentTypeSelect = document.getElementById('paymentType');
+                paymentTypes.forEach(type => {
+                    const option = document.createElement('option');
+                    option.value = type;
+                    option.text = type;
+                    paymentTypeSelect.add(option);
+                });
             }
-        }
-
-        async function submitPayment(event) {
-            event.preventDefault();  // Prevent the default form submission
-
-            const type = document.getElementById('paymentType').value;
-            let detailsObj = {};
-
-            const amount = document.getElementById('amount').value;
-
-            if (type === "Credit Card") {
-                detailsObj = {
-                    cardNumber: document.getElementById('cardNumber').value,
-                    expiryMonth: document.getElementById('expiryMonth').value,
-                    expiryYear: document.getElementById('expiryYear').value,
-                    cvc: document.getElementById('cvc').value,
-                    amount: amount
-                };
-            } else if (type === "PayPal") {
-                detailsObj = {
-                    email: document.getElementById('paypalEmail').value,
-                    amount: amount
+    
+            async function fetchConversionRate(currency) {
+                const response = await fetch(`https://api.exchangerate-api.com/v4/latest/${currency}`);
+                const data = await response.json();
+                // Assume we are converting to USD as an example
+                return data.rates.USD;
+            }
+    
+            async function updateAmount() {
+                const slider = document.getElementById('amountSlider');
+                const amountInput = document.getElementById('amount');
+                const currency = document.getElementById('currency').value;
+    
+                // Update the amount display
+                amountInput.value = `${slider.value} ${currency}`;
+    
+                // Fetch and display the converted amount
+                const conversionRate = await fetchConversionRate(currency);
+                const convertedAmount = slider.value * conversionRate;
+                amountInput.value = `${convertedAmount.toFixed(2)} USD`;
+            }
+    
+            document.getElementById('currency').addEventListener('change', updateAmount);
+            document.getElementById('amountSlider').addEventListener('input', updateAmount);
+    
+            async function submitPayment(event) {
+                event.preventDefault();  // Prevent the default form submission
+    
+                const type = document.getElementById('paymentType').value;
+                let detailsObj = {};
+    
+                const amount = document.getElementById('amount').value;
+    
+                if (type === "Credit Card") {
+                    detailsObj = {
+                        cardNumber: document.getElementById('cardNumber').value,
+                        expiryMonth: document.getElementById('expiryMonth').value,
+                        expiryYear: document.getElementById('expiryYear').value,
+                        cvc: document.getElementById('cvc').value,
+                        amount: amount
+                    };
+                } else if (type === "PayPal") {
+                    detailsObj = {
+                        email: document.getElementById('paypalEmail').value,
+                        amount: amount
                 };
             } else if (type === "Bank Transfer") {
                 detailsObj = {
@@ -596,66 +516,55 @@ XML:
             }
         }
 
-        function updateAmount() {
-    const slider = document.getElementById('amountSlider');
-    const amountInput = document.getElementById('amount');
-    amountInput.value = `${slider.value} ${document.getElementById('currency').value}`;
-}
-
-document.getElementById('currency').addEventListener('change', updateAmount);
-document.getElementById('amountSlider').addEventListener('input', updateAmount);
-
-// Ensure the payment details section is displayed when a payment type is selected
-function updatePaymentInfo() {
-    const paymentType = document.getElementById('paymentType').value;
-    const info = paymentInfo[paymentType];
-
-    document.getElementById('creditCardDetails').style.display = 'none';
-    document.getElementById('paypalDetails').style.display = 'none';
-    document.getElementById('bankTransferDetails').style.display = 'none';
-    document.getElementById('chequeDetails').style.display = 'none';
-    document.getElementById('batchFileUpload').style.display = 'none';
-    document.getElementById('paymentDetails').style.display = 'block';
-
-    if (info) {
-        if (paymentType === "Credit Card") {
-            document.getElementById('creditCardDetails').style.display = 'block';
-        } else if (paymentType === "PayPal") {
-            document.getElementById('paypalDetails').style.display = 'block';
-        } else if (paymentType === "Bank Transfer") {
-            document.getElementById('bankTransferDetails').style.display = 'block';
-            document.querySelector('.recipient-details').style.display = 'block';
-        } else if (paymentType === "Cheque") {
-            document.getElementById('chequeDetails').style.display = 'block';
-        } else if (paymentType === "Batch File") {
-            document.getElementById('batchFileUpload').style.display = 'block';
-        }
-
-        const infoDiv = document.getElementById('paymentInfo');
-        infoDiv.innerHTML = `
-            <h2>${paymentType} Information</h2>
-            <p>${info.description}</p>
-            <div>
-                <h3>Correct Example</h3>
-                <pre>${JSON.stringify(info.examples.correct, null, 2)}</pre>
-                <h3>Incorrect Example</h3>
-                <pre>${JSON.stringify(info.examples.incorrect, null, 2)}</pre>
-                <h3>API Test Data</h3>
-                <pre>${info.apiTest}</pre>
-                <h3>Postman/Insomnia Example</h3>
-                <pre>URL: https://payment-poc-production.up.railway.app/api/validate-payment</pre>
-                <pre>Method: POST</pre>
-                <pre>Body: ${info.apiTest}</pre>
-            </div>
-        `;
-    }
-}
-
         document.getElementById('submitPayment').addEventListener('click', submitPayment);
         document.getElementById('checkStatus').addEventListener('click', checkTransactionStatus);
 
-        fetchPaymentTypes();
+        function updatePaymentInfo() {
+            const paymentType = document.getElementById('paymentType').value;
+            const info = paymentInfo[paymentType];
+
+            document.getElementById('creditCardDetails').style.display = 'none';
+            document.getElementById('paypalDetails').style.display = 'none';
+            document.getElementById('bankTransferDetails').style.display = 'none';
+            document.getElementById('chequeDetails').style.display = 'none';
+            document.getElementById('batchFileUpload').style.display = 'none';
+            document.getElementById('paymentDetails').style.display = 'block';
+
+            if (info) {
+                if (paymentType === "Credit Card") {
+                    document.getElementById('creditCardDetails').style.display = 'block';
+                } else if (paymentType === "PayPal") {
+                    document.getElementById('paypalDetails').style.display = 'block';
+                } else if (paymentType === "Bank Transfer") {
+                    document.getElementById('bankTransferDetails').style.display = 'block';
+                    document.querySelector('.recipient-details').style.display = 'block';
+                } else if (paymentType === "Cheque") {
+                    document.getElementById('chequeDetails').style.display = 'block';
+                } else if (paymentType === "Batch File") {
+                    document.getElementById('batchFileUpload').style.display = 'block';
+                }
+
+                const infoDiv = document.getElementById('paymentInfo');
+                infoDiv.innerHTML = `
+                    <h2>${paymentType} Information</h2>
+                    <p>${info.description}</p>
+                    <div>
+                        <h3>Correct Example</h3>
+                        <pre>${JSON.stringify(info.examples.correct, null, 2)}</pre>
+                        <h3>Incorrect Example</h3>
+                        <pre>${JSON.stringify(info.examples.incorrect, null, 2)}</pre>
+                        <h3>API Test Data</h3>
+                        <pre>${info.apiTest}</pre>
+                        <h3>Postman/Insomnia Example</h3>
+                        <pre>URL: https://payment-poc-production.up.railway.app/api/validate-payment</pre>
+                        <pre>Method: POST</pre>
+                        <pre>Body: ${info.apiTest}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchPaymentTypes);
     </script>
 </body>
-
 </html>
