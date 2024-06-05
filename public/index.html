@@ -9,13 +9,18 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f8f9fa;
+            background: url('https://images.unsplash.com/photo-1501447298483-3f0e24f39b56') no-repeat center center fixed;
+            background-size: cover;
+            color: #333;
         }
         .container {
             width: 80%;
             margin: auto;
             overflow: hidden;
             padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         header {
             background: #333;
@@ -55,12 +60,23 @@
             padding: 20px;
         }
         .button_1 {
-            height: 38px;
+            height: 50px;
             background: #0779e4;
             border: 0;
             padding-left: 20px;
             padding-right: 20px;
             color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 5px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+        .button_1:hover {
+            background: #005bb5;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
         .dark {
             padding: 15px;
@@ -68,11 +84,34 @@
             color: #fff;
             margin-top: 10px;
             margin-bottom: 10px;
+            border-radius: 5px;
         }
         .highlight {
             background-color: yellow;
             padding: 15px;
             margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        h2 {
+            font-size: 24px;
+            color: #0779e4;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .payment-details {
+            display: none;
+            margin-top: 20px;
+        }
+        .payment-details input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
     </style>
 </head>
@@ -92,10 +131,28 @@
     <section id="main" class="container">
         <h1>Select Payment Type</h1>
         <div>
-            <select id="paymentType" onchange="updatePaymentInfo()"></select>
+            <select id="paymentType" onchange="updatePaymentInfo()">
+                <option value="">Select a payment type</option>
+            </select>
         </div>
-        <div>
-            <input type="text" id="paymentDetails" placeholder="Enter payment details">
+        <div id="paymentDetails" class="payment-details">
+            <!-- Credit Card Details -->
+            <div id="creditCardDetails">
+                <input type="text" id="cardNumber" placeholder="Card Number">
+                <input type="text" id="expiryMonth" placeholder="Expiry Month (MM)">
+                <input type="text" id="expiryYear" placeholder="Expiry Year (YYYY)">
+                <input type="text" id="cvc" placeholder="CVC">
+            </div>
+            <!-- PayPal Details -->
+            <div id="paypalDetails">
+                <input type="email" id="paypalEmail" placeholder="PayPal Email">
+            </div>
+            <!-- Bank Transfer Details -->
+            <div id="bankTransferDetails">
+                <input type="text" id="accountNumber" placeholder="Account Number">
+                <input type="text" id="sortCode" placeholder="Sort Code">
+                <input type="text" id="iban" placeholder="IBAN">
+            </div>
             <button class="button_1" id="submitPayment">Submit Payment</button>
         </div>
         <div id="paymentInfo" class="dark">
@@ -104,7 +161,7 @@
         </div>
         <div id="transactionStatus" class="dark" style="display:none;">
             <h2>Transaction Status</h2>
-            <input type="text" id="transactionId" placeholder="Enter transaction ID">
+            <input type="text" id="transactionId" placeholder="Enter transaction ID" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc;">
             <button class="button_1" id="checkStatus">Check Status</button>
             <div id="statusResult"></div>
         </div>
@@ -194,7 +251,19 @@
             const paymentType = document.getElementById('paymentType').value;
             const info = paymentInfo[paymentType];
 
+            document.getElementById('creditCardDetails').style.display = 'none';
+            document.getElementById('paypalDetails').style.display = 'none';
+            document.getElementById('bankTransferDetails').style.display = 'none';
+            document.getElementById('paymentDetails').style.display = 'block';
             if (info) {
+                if (paymentType === "Credit Card") {
+                    document.getElementById('creditCardDetails').style.display = 'block';
+                } else if (paymentType === "PayPal") {
+                    document.getElementById('paypalDetails').style.display = 'block';
+                } else if (paymentType === "Bank Transfer") {
+                    document.getElementById('bankTransferDetails').style.display = 'block';
+                }
+
                 const infoDiv = document.getElementById('paymentInfo');
                 infoDiv.innerHTML = `
                     <h2>${paymentType} Information</h2>
@@ -219,14 +288,25 @@
             event.preventDefault();  // Prevent the default form submission
 
             const type = document.getElementById('paymentType').value;
-            const details = document.getElementById('paymentDetails').value;
+            let detailsObj = {};
 
-            let detailsObj;
-            try {
-                detailsObj = JSON.parse(details);  // Try to parse the details as JSON
-            } catch (error) {
-                alert('Please enter valid JSON for payment details.');
-                return;  // Stop the function execution if the JSON is invalid
+            if (type === "Credit Card") {
+                detailsObj = {
+                    cardNumber: document.getElementById('cardNumber').value,
+                    expiryMonth: document.getElementById('expiryMonth').value,
+                    expiryYear: document.getElementById('expiryYear').value,
+                    cvc: document.getElementById('cvc').value
+                };
+            } else if (type === "PayPal") {
+                detailsObj = {
+                    email: document.getElementById('paypalEmail').value
+                };
+            } else if (type === "Bank Transfer") {
+                detailsObj = {
+                    accountNumber: document.getElementById('accountNumber').value,
+                    sortCode: document.getElementById('sortCode').value,
+                    IBAN: document.getElementById('iban').value
+                };
             }
 
             const response = await fetch('/api/validate-payment', {
@@ -239,14 +319,15 @@
 
             const result = await response.json();
             if (result.valid) {
-                await fetch('/api/submit-payment', {
+                const submitResponse = await fetch('/api/submit-payment', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({ type, details: detailsObj })
                 });
-                alert('Payment submitted successfully');
+                const submitResult = await submitResponse.json();
+                alert(`Payment submitted successfully. Transaction ID: ${submitResult.transactionId}`);
             } else {
                 alert('Invalid payment details');
             }
