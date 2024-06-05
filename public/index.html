@@ -9,7 +9,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: url('https://unsplash.com/photos/us-dollar-banknote-with-map-ir5MHI6rPg0') no-repeat center center fixed;
+            background: url('https://images.unsplash.com/photo-1501447298483-3f0e24f39b56') no-repeat center center fixed;
             background-size: cover;
             color: #333;
         }
@@ -18,7 +18,7 @@
             margin: auto;
             overflow: hidden;
             padding: 20px;
-            background: rgba(44, 32, 32, 0.9);
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
@@ -84,7 +84,7 @@
             color: #ff6347;
         }
         pre {
-            background: #097742;
+            background: #f4f4f4;
             padding: 10px;
             border-radius: 5px;
             overflow-x: auto;
@@ -100,11 +100,36 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+        .payment-details input[title] {
+            position: relative;
+        }
+        .payment-details input[title]:hover:after {
+            content: attr(title);
+            position: absolute;
+            left: 100%;
+            margin-left: 10px;
+            padding: 5px;
+            background: #333;
+            color: #fff;
+            border-radius: 5px;
+            white-space: nowrap;
+        }
         .recipient-details {
             display: none;
             margin-top: 20px;
         }
         .recipient-details input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .cheque-details, .batch-file-upload {
+            display: none;
+            margin-top: 20px;
+        }
+        .cheque-details input, .batch-file-upload input {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -130,29 +155,41 @@
             </select>
         </div>
         <div id="paymentDetails" class="payment-details">
+            <input type="text" id="amount" placeholder="Amount" title="Enter the amount to be transferred.">
             <!-- Credit Card Details -->
             <div id="creditCardDetails">
-                <input type="text" id="cardNumber" placeholder="Card Number">
-                <input type="text" id="expiryMonth" placeholder="Expiry Month (MM)">
-                <input type="text" id="expiryYear" placeholder="Expiry Year (YYYY)">
-                <input type="text" id="cvc" placeholder="CVC">
+                <input type="text" id="cardNumber" placeholder="Card Number" title="Enter your credit card number.">
+                <input type="text" id="expiryMonth" placeholder="Expiry Month (MM)" title="Enter the expiry month of your credit card.">
+                <input type="text" id="expiryYear" placeholder="Expiry Year (YYYY)" title="Enter the expiry year of your credit card.">
+                <input type="text" id="cvc" placeholder="CVC" title="Enter the CVC code found on the back of your credit card.">
             </div>
             <!-- PayPal Details -->
             <div id="paypalDetails">
-                <input type="email" id="paypalEmail" placeholder="PayPal Email">
+                <input type="email" id="paypalEmail" placeholder="PayPal Email" title="Enter your PayPal email address.">
             </div>
             <!-- Bank Transfer Details -->
             <div id="bankTransferDetails">
-                <input type="text" id="accountNumber" placeholder="Account Number">
-                <input type="text" id="sortCode" placeholder="Sort Code">
-                <input type="text" id="iban" placeholder="IBAN">
+                <input type="text" id="accountNumber" placeholder="Account Number" title="Enter your bank account number.">
+                <input type="text" id="sortCode" placeholder="Sort Code" title="Enter your bank's sort code.">
+                <input type="text" id="iban" placeholder="IBAN" title="Enter your IBAN number.">
                 <!-- Recipient Account Details -->
                 <div class="recipient-details">
                     <h2>Recipient Account Details</h2>
-                    <input type="text" id="recipientAccountNumber" placeholder="Recipient Account Number">
-                    <input type="text" id="recipientSortCode" placeholder="Recipient Sort Code">
-                    <input type="text" id="recipientIBAN" placeholder="Recipient IBAN">
+                    <input type="text" id="recipientAccountNumber" placeholder="Recipient Account Number" title="Enter the recipient's bank account number.">
+                    <input type="text" id="recipientSortCode" placeholder="Recipient Sort Code" title="Enter the recipient's bank sort code.">
+                    <input type="text" id="recipientIBAN" placeholder="Recipient IBAN" title="Enter the recipient's IBAN number.">
                 </div>
+            </div>
+            <!-- Cheque Details -->
+            <div id="chequeDetails" class="cheque-details">
+                <input type="text" id="chequeNumber" placeholder="Cheque Number" title="Enter the cheque number.">
+                <input type="text" id="chequeBankCode" placeholder="Bank Code" title="Enter the bank code.">
+                <input type="text" id="chequeAmount" placeholder="Amount" title="Enter the amount on the cheque.">
+                <input type="file" id="chequeImage" accept="image/*" title="Upload an image of the cheque.">
+            </div>
+            <!-- Batch File Upload -->
+            <div id="batchFileUpload" class="batch-file-upload">
+                <input type="file" id="batchFile" accept=".csv, .json, .xml" title="Upload a batch file (CSV, JSON, XML).">
             </div>
             <button class="button_1" id="submitPayment">Submit Payment</button>
         </div>
@@ -168,7 +205,7 @@
         </div>
     </section>
     <script>
-        const paymentTypes = ["Credit Card", "PayPal", "Bank Transfer"];
+        const paymentTypes = ["Credit Card", "PayPal", "Bank Transfer", "Cheque", "Batch File"];
         const paymentInfo = {
             "Credit Card": {
                 description: "Credit cards are used for various transactions online and offline. They provide a convenient way to pay for goods and services.",
@@ -177,13 +214,15 @@
                         cardNumber: "4111111111111111",
                         expiryMonth: "12",
                         expiryYear: "2025",
-                        cvc: "123"
+                        cvc: "123",
+                        amount: "100.00"
                     },
                     incorrect: {
                         cardNumber: "1234567890123456",
                         expiryMonth: "13",
                         expiryYear: "2020",
-                        cvc: "12a"
+                        cvc: "12a",
+                        amount: "ten"
                     }
                 },
                 apiTest: `{
@@ -192,7 +231,8 @@
                         "cardNumber": "4111111111111111",
                         "expiryMonth": "12",
                         "expiryYear": "2025",
-                        "cvc": "123"
+                        "cvc": "123",
+                        "amount": "100.00"
                     }
                 }`
             },
@@ -200,16 +240,19 @@
                 description: "PayPal is an online payment system that allows users to transfer money and make payments securely over the Internet.",
                 examples: {
                     correct: {
-                        email: "test@example.com"
+                        email: "test@example.com",
+                        amount: "100.00"
                     },
                     incorrect: {
-                        email: "testexample.com"
+                        email: "testexample.com",
+                        amount: "ten"
                     }
                 },
                 apiTest: `{
                     "type": "PayPal",
                     "details": {
-                        "email": "test@example.com"
+                        "email": "test@example.com",
+                        "amount": "100.00"
                     }
                 }`
             },
@@ -219,12 +262,14 @@
                     correct: {
                         accountNumber: "12345678",
                         sortCode: "123456",
-                        IBAN: "GB82WEST12345698765432"
+                        IBAN: "GB82WEST12345698765432",
+                        amount: "1000.00"
                     },
                     incorrect: {
                         accountNumber: "1234",
                         sortCode: "12",
-                        IBAN: "GB82 WEST 1234 5698 7654"
+                        IBAN: "GB82 WEST 1234 5698 7654",
+                        amount: "one thousand"
                     }
                 },
                 apiTest: `{
@@ -232,7 +277,115 @@
                     "details": {
                         "accountNumber": "12345678",
                         "sortCode": "123456",
-                        "IBAN": "GB82WEST12345698765432"
+                        "IBAN": "GB82WEST12345698765432",
+                        "amount": "1000.00"
+                    }
+                }`
+            },
+            "Cheque": {
+                description: "Cheques are a traditional payment method where a written order directs a bank to pay a specific amount of money from one account to another. They are often used for larger or formal transactions.",
+                examples: {
+                    correct: {
+                        chequeNumber: "100200300",
+                        chequeBankCode: "123456",
+                        chequeAmount: "1500.00"
+                    },
+                    incorrect: {
+                        chequeNumber: "1002",
+                        chequeBankCode: "123",
+                        chequeAmount: "fifteen hundred"
+                    }
+                },
+                apiTest: `{
+                    "type": "Cheque",
+                    "details": {
+                        "chequeNumber": "100200300",
+                        "chequeBankCode": "123456",
+                        "chequeAmount": "1500.00"
+                    }
+                }`
+            },
+            "Batch File": {
+                description: "Batch file processing allows you to process multiple transactions at once by uploading a file containing the transaction details. Supported formats include CSV, JSON, and XML.",
+                examples: {
+                    correct: `CSV:
+"transactionType","details"
+"Credit Card","{\\"cardNumber\\":\\"4111111111111111\\",\\"expiryMonth\\":\\"12\\",\\"expiryYear\\":\\"2025\\",\\"cvc\\":\\"123\\",\\"amount\\":\\"100.00\\"}"
+JSON:
+[
+    {
+        "type": "Credit Card",
+        "details": {
+            "cardNumber": "4111111111111111",
+            "expiryMonth": "12",
+            "expiryYear": "2025",
+            "cvc": "123",
+            "amount": "100.00"
+        }
+    },
+    {
+        "type": "PayPal",
+        "details": {
+            "email": "test@example.com",
+            "amount": "100.00"
+        }
+    }
+]
+XML:
+<transactions>
+    <transaction>
+        <type>Credit Card</type>
+        <details>
+            <cardNumber>4111111111111111</cardNumber>
+            <expiryMonth>12</expiryMonth>
+            <expiryYear>2025</expiryYear>
+            <cvc>123</cvc>
+            <amount>100.00</amount>
+        </details>
+    </transaction>
+    <transaction>
+        <type>PayPal</type>
+        <details>
+            <email>test@example.com</email>
+            <amount>100.00</amount>
+        </details>
+    </transaction>
+</transactions>`,
+                    incorrect: `CSV:
+"transactionType","details"
+"Credit Card","cardNumber: 1234, expiryMonth: 13, expiryYear: 2020, cvc: abc, amount: ten"
+JSON:
+[
+    {
+        "type": "Credit Card",
+        "details": {
+            "cardNumber": "1234",
+            "expiryMonth": "13",
+            "expiryYear": "2020",
+            "cvc": "abc",
+            "amount": "ten"
+        }
+    }
+]
+XML:
+<transactions>
+    <transaction>
+        <type>Credit Card</type>
+        <details>
+            <cardNumber>1234</cardNumber>
+            <expiryMonth>13</expiryMonth>
+            <expiryYear>2020</expiryYear>
+            <cvc>abc</cvc>
+            <amount>ten</amount>
+        </details>
+    </transaction>
+</transactions>`
+                },
+                apiTest: `{
+                    "type": "Batch File",
+                    "details": {
+                        "fileType": "csv",
+                        "fileContent": "transactionType,details\\nCredit Card,\\"{\\\\\\"cardNumber\\\\\\":\\\\\\"4111111111111111\\\\\\",\\\\\\"expiryMonth\\\\\\":\\\\\\"12\\\\\\",\\\\\\"expiryYear\\\\\\":\\\\\\"2025\\\\\\",\\\\\\"cvc\\\\\\":\\\\\\"123\\\\\\",\\\\\\"amount\\\\\\":\\\\\\"100.00\\\\\\"}\\""
                     }
                 }`
             }
@@ -255,6 +408,8 @@
             document.getElementById('creditCardDetails').style.display = 'none';
             document.getElementById('paypalDetails').style.display = 'none';
             document.getElementById('bankTransferDetails').style.display = 'none';
+            document.getElementById('chequeDetails').style.display = 'none';
+            document.getElementById('batchFileUpload').style.display = 'none';
             document.getElementById('paymentDetails').style.display = 'block';
 
             if (info) {
@@ -265,6 +420,10 @@
                 } else if (paymentType === "Bank Transfer") {
                     document.getElementById('bankTransferDetails').style.display = 'block';
                     document.querySelector('.recipient-details').style.display = 'block';
+                } else if (paymentType === "Cheque") {
+                    document.getElementById('chequeDetails').style.display = 'block';
+                } else if (paymentType === "Batch File") {
+                    document.getElementById('batchFileUpload').style.display = 'block';
                 }
 
                 const infoDiv = document.getElementById('paymentInfo');
@@ -293,16 +452,20 @@
             const type = document.getElementById('paymentType').value;
             let detailsObj = {};
 
+            const amount = document.getElementById('amount').value;
+
             if (type === "Credit Card") {
                 detailsObj = {
                     cardNumber: document.getElementById('cardNumber').value,
                     expiryMonth: document.getElementById('expiryMonth').value,
                     expiryYear: document.getElementById('expiryYear').value,
-                    cvc: document.getElementById('cvc').value
+                    cvc: document.getElementByid('cvc').value,
+                    amount: amount
                 };
             } else if (type === "PayPal") {
                 detailsObj = {
-                    email: document.getElementById('paypalEmail').value
+                    email: document.getElementById('paypalEmail').value,
+                    amount: amount
                 };
             } else if (type === "Bank Transfer") {
                 detailsObj = {
@@ -311,7 +474,22 @@
                     IBAN: document.getElementById('iban').value,
                     recipientAccountNumber: document.getElementById('recipientAccountNumber').value,
                     recipientSortCode: document.getElementById('recipientSortCode').value,
-                    recipientIBAN: document.getElementById('recipientIBAN').value
+                    recipientIBAN: document.getElementById('recipientIBAN').value,
+                    amount: amount
+                };
+            } else if (type === "Cheque") {
+                detailsObj = {
+                    chequeNumber: document.getElementById('chequeNumber').value,
+                    chequeBankCode: document.getElementById('chequeBankCode').value,
+                    chequeAmount: document.getElementById('chequeAmount').value
+                };
+            } else if (type === "Batch File") {
+                const batchFile = document.getElementById('batchFile').files[0];
+                const fileType = batchFile.type;
+                const fileContent = await batchFile.text();
+                detailsObj = {
+                    fileType: fileType,
+                    fileContent: fileContent
                 };
             }
 
@@ -374,4 +552,3 @@
     </script>
 </body>
 </html>
-
