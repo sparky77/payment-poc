@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment POC</title>
+</head>
+<body>
+    <h1>Payment POC</h1>
+    <div id="app">
+        <select id="paymentType"></select>
+        <input type="text" id="paymentDetails" placeholder="Enter payment details">
+        <button onclick="submitPayment()">Submit Payment</button>
+    </div>
+    <script>
+        async function fetchPaymentTypes() {
+            const response = await fetch('/api/payment-types');
+            const paymentTypes = await response.json();
+            const paymentTypeSelect = document.getElementById('paymentType');
+            paymentTypes.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.text = type;
+                paymentTypeSelect.add(option);
+            });
+        }
+
+        async function submitPayment() {
+            const type = document.getElementById('paymentType').value;
+            const details = document.getElementById('paymentDetails').value;
+            const response = await fetch('/api/validate-payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ type, details })
+            });
+            const result = await response.json();
+            if (result.valid) {
+                await fetch('/api/submit-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ type, details })
+                });
+                alert('Payment submitted successfully');
+            } else {
+                alert('Invalid payment details');
+            }
+        }
+
+        fetchPaymentTypes();
+    </script>
+</body>
+</html>
