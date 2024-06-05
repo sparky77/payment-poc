@@ -84,7 +84,7 @@
             color: #ff6347;
         }
         pre {
-            background: #f4f4f4;
+            background: #0b592e;
             padding: 10px;
             border-radius: 5px;
             overflow-x: auto;
@@ -418,75 +418,83 @@
             document.getElementById('amountSlider').addEventListener('input', updateAmount);
     
             async function submitPayment(event) {
-                event.preventDefault();  // Prevent the default form submission
-    
-                const type = document.getElementById('paymentType').value;
-                let detailsObj = {};
-    
-                const amount = document.getElementById('amount').value;
-    
-                if (type === "Credit Card") {
-                    detailsObj = {
-                        cardNumber: document.getElementById('cardNumber').value,
-                        expiryMonth: document.getElementById('expiryMonth').value,
-                        expiryYear: document.getElementById('expiryYear').value,
-                        cvc: document.getElementById('cvc').value,
-                        amount: amount
-                    };
-                } else if (type === "PayPal") {
-                    detailsObj = {
-                        email: document.getElementById('paypalEmail').value,
-                        amount: amount
-                };
-            } else if (type === "Bank Transfer") {
-                detailsObj = {
-                    accountNumber: document.getElementById('accountNumber').value,
-                    sortCode: document.getElementById('sortCode').value,
-                    IBAN: document.getElementById('iban').value,
-                    recipientAccountNumber: document.getElementById('recipientAccountNumber').value,
-                    recipientSortCode: document.getElementById('recipientSortCode').value,
-                    recipientIBAN: document.getElementById('recipientIBAN').value,
-                    amount: amount
-                };
-            } else if (type === "Cheque") {
-                detailsObj = {
-                    chequeNumber: document.getElementById('chequeNumber').value,
-                    chequeBankCode: document.getElementById('chequeBankCode').value,
-                    chequeAmount: document.getElementById('chequeAmount').value
-                };
-            } else if (type === "Batch File") {
-                const batchFile = document.getElementById('batchFile').files[0];
-                const fileType = batchFile.type;
-                const fileContent = await batchFile.text();
-                detailsObj = {
-                    fileType: fileType,
-                    fileContent: fileContent
-                };
-            }
+    event.preventDefault();  // Prevent the default form submission
 
-            const response = await fetch('/api/validate-payment', {
+    const type = document.getElementById('paymentType').value;
+    let detailsObj = {};
+
+    const amount = document.getElementById('amount').value;
+
+    if (type === "Credit Card") {
+        detailsObj = {
+            cardNumber: document.getElementById('cardNumber').value,
+            expiryMonth: document.getElementById('expiryMonth').value,
+            expiryYear: document.getElementById('expiryYear').value,
+            cvc: document.getElementById('cvc').value,
+            amount: amount
+        };
+    } else if (type === "PayPal") {
+        detailsObj = {
+            email: document.getElementById('paypalEmail').value,
+            amount: amount
+        };
+    } else if (type === "Bank Transfer") {
+        detailsObj = {
+            accountNumber: document.getElementById('accountNumber').value,
+            sortCode: document.getElementById('sortCode').value,
+            IBAN: document.getElementById('iban').value,
+            recipientAccountNumber: document.getElementById('recipientAccountNumber').value,
+            recipientSortCode: document.getElementById('recipientSortCode').value,
+            recipientIBAN: document.getElementById('recipientIBAN').value,
+            amount: amount
+        };
+    } else if (type === "Cheque") {
+        detailsObj = {
+            chequeNumber: document.getElementById('chequeNumber').value,
+            chequeBankCode: document.getElementById('chequeBankCode').value,
+            chequeAmount: document.getElementById('chequeAmount').value
+        };
+    } else if (type === "Batch File") {
+        const batchFile = document.getElementById('batchFile').files[0];
+        const fileType = batchFile.type;
+        const fileContent = await batchFile.text();
+        detailsObj = {
+            fileType: fileType,
+            fileContent: fileContent
+        };
+    }
+
+    try {
+        const response = await fetch('/api/validate-payment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ type, details: detailsObj })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Validation failed: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        if (result.valid) {
+            const submitResponse = await fetch('/api/submit-payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ type, details: detailsObj })
             });
-
-            const result = await response.json();
-            if (result.valid) {
-                const submitResponse = await fetch('/api/submit-payment', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ type, details: detailsObj })
-                });
-                const submitResult = await submitResponse.json();
-                alert(`Payment submitted successfully. Transaction ID: ${submitResult.transactionId}`);
-            } else {
-                alert('Invalid payment details');
-            }
+            const submitResult = await submitResponse.json();
+            alert(`Payment submitted successfully. Transaction ID: ${submitResult.transactionId}`);
+        } else {
+            alert('Invalid payment details: ' + result.message);
         }
+    } catch (error) {
+        alert('Error: ' + error.message);
+    }
+}
 
         async function checkTransactionStatus(event) {
             event.preventDefault();

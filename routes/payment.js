@@ -4,15 +4,9 @@ const creditCard = require('credit-card-validation');
 const iban = require('iban');
 const router = express.Router();
 
-const paymentTypes = [
-    "Credit Card",
-    "PayPal",
-    "Bank Transfer",
-    "Cheque",
-    "Batch File"
-];
-let paymentDetails = [];
-let transactions = {}; // Store transactions for demo purposes
+const paymentTypes = ['Credit Card', 'PayPal', 'Bank Transfer', 'Cheque', 'Batch File'];
+const paymentDetails = [];
+const transactions = {}; // Store transactions for demo purposes
 
 router.get('/payment-types', (req, res) => {
   res.json(paymentTypes);
@@ -28,7 +22,7 @@ router.post('/validate-payment', (req, res) => {
 
   // Validate credit card details
   if (type === 'Credit Card') {
-    const { cardNumber, expiryMonth, expiryYear, cvc } = details;
+    const { cardNumber, expiryMonth, expiryYear, cvc, amount } = details;
 
     if (!creditCard.validateCardNumber(cardNumber)) {
       return res.status(400).json({ valid: false, message: 'Invalid credit card number' });
@@ -41,28 +35,34 @@ router.post('/validate-payment', (req, res) => {
     if (!creditCard.validateCVC(cvc)) {
       return res.status(400).json({ valid: false, message: 'Invalid CVC' });
     }
+
+    if (!validator.isCurrency(amount, { allow_negatives: false })) {
+      return res.status(400).json({ valid: false, message: 'Invalid amount' });
+    }
   }
 
   // Validate PayPal details
   if (type === 'PayPal') {
-    const { email } = details;
+    const { email, amount } = details;
 
     if (!validator.isEmail(email)) {
       return res.status(400).json({ valid: false, message: 'Invalid PayPal email' });
+    }
+
+    if (!validator.isCurrency(amount, { allow_negatives: false })) {
+      return res.status(400).json({ valid: false, message: 'Invalid amount' });
     }
   }
 
   // Validate bank transfer details
   if (type === 'Bank Transfer') {
-    const { accountNumber, sortCode, IBAN } = details;
+    const { accountNumber, sortCode, IBAN, amount } = details;
 
-    // Validate IBAN if provided
     if (IBAN) {
       if (!iban.isValid(IBAN)) {
         return res.status(400).json({ valid: false, message: 'Invalid IBAN' });
       }
     } else {
-      // Validate account number and sort code
       if (!validator.isNumeric(accountNumber) || accountNumber.length < 8 || accountNumber.length > 20) {
         return res.status(400).json({ valid: false, message: 'Invalid bank account number' });
       }
@@ -70,6 +70,10 @@ router.post('/validate-payment', (req, res) => {
       if (!validator.isNumeric(sortCode) || sortCode.length !== 6) {
         return res.status(400).json({ valid: false, message: 'Invalid bank sort code' });
       }
+    }
+
+    if (!validator.isCurrency(amount, { allow_negatives: false })) {
+      return res.status(400).json({ valid: false, message: 'Invalid amount' });
     }
   }
 
