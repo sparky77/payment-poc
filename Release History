@@ -1,0 +1,21 @@
+POC phase changes 
+
+Improvements and Enhancements
+
+Fix HTML Alignment:
+Ensure the HTML content is aligned.
+
+Color Code the API Section:
+Add a yellow background to the API information section.
+
+Detailed Descriptions:
+Add more detailed descriptions for each payment type and examples for Postman or Insomnia.
+
+  Explanation of IBAN:
+Provide a detailed explanation of what IBAN is.
+
+Recipient Account Verification:
+Discuss ways to select/verify the recipient account.
+
+Transaction Status Check:
+Add a dropdown option to check transaction status by entering a bank reference ID.
