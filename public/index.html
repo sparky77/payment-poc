@@ -4,18 +4,185 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment POC</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #0779e4 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        header #branding {
+            float: left;
+        }
+        header #branding h1 {
+            margin: 0;
+        }
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+        header .highlight, header .current a {
+            color: #0779e4;
+        }
+        header a:hover {
+            color: #ccc;
+        }
+        #showcase {
+            min-height: 400px;
+            background: url('showcase.jpg') no-repeat 0 -400px;
+            text-align: center;
+            color: #fff;
+        }
+        #showcase h1 {
+            margin-top: 100px;
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+        #showcase p {
+            font-size: 20px;
+        }
+        #main {
+            padding: 20px;
+        }
+        .button_1 {
+            height: 38px;
+            background: #0779e4;
+            border: 0;
+            padding-left: 20px;
+            padding-right: 20px;
+            color: #fff;
+        }
+        .dark {
+            padding: 15px;
+            background: #333;
+            color: #fff;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Payment POC</h1>
-    <div id="app">
-        <select id="paymentType"></select>
-        <input type="text" id="paymentDetails" placeholder="Enter payment details">
-        <button onclick="submitPayment()">Submit Payment</button>
-    </div>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1>Payment POC</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li class="current"><a href="index.html">Home</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section id="main" class="container">
+        <h1>Select Payment Type</h1>
+        <div>
+            <select id="paymentType" onchange="updatePaymentInfo()"></select>
+        </div>
+        <div>
+            <input type="text" id="paymentDetails" placeholder="Enter payment details">
+            <button class="button_1" onclick="submitPayment()">Submit Payment</button>
+        </div>
+        <div id="paymentInfo" class="dark">
+            <h2>Payment Type Information</h2>
+            <p>Select a payment type to see more information.</p>
+        </div>
+    </section>
     <script>
+        const paymentTypes = ["Credit Card", "PayPal", "Bank Transfer"];
+        const paymentInfo = {
+            "Credit Card": {
+                description: "Credit cards are used for various transactions online and offline. They provide a convenient way to pay for goods and services.",
+                examples: {
+                    correct: {
+                        cardNumber: "4111111111111111",
+                        expiryMonth: "12",
+                        expiryYear: "2025",
+                        cvc: "123"
+                    },
+                    incorrect: {
+                        cardNumber: "1234567890123456",
+                        expiryMonth: "13",
+                        expiryYear: "2020",
+                        cvc: "12a"
+                    }
+                },
+                apiTest: `{
+                    "type": "Credit Card",
+                    "details": {
+                        "cardNumber": "4111111111111111",
+                        "expiryMonth": "12",
+                        "expiryYear": "2025",
+                        "cvc": "123"
+                    }
+                }`
+            },
+            "PayPal": {
+                description: "PayPal is an online payment system that allows users to transfer money and make payments securely over the Internet.",
+                examples: {
+                    correct: {
+                        email: "test@example.com"
+                    },
+                    incorrect: {
+                        email: "testexample.com"
+                    }
+                },
+                apiTest: `{
+                    "type": "PayPal",
+                    "details": {
+                        "email": "test@example.com"
+                    }
+                }`
+            },
+            "Bank Transfer": {
+                description: "Bank transfers involve transferring money directly from one bank account to another. It is often used for larger transactions.",
+                examples: {
+                    correct: {
+                        accountNumber: "12345678",
+                        sortCode: "123456",
+                        IBAN: "GB82WEST12345698765432"
+                    },
+                    incorrect: {
+                        accountNumber: "1234",
+                        sortCode: "12",
+                        IBAN: "GB82 WEST 1234 5698 7654"
+                    }
+                },
+                apiTest: `{
+                    "type": "Bank Transfer",
+                    "details": {
+                        "accountNumber": "12345678",
+                        "sortCode": "123456",
+                        "IBAN": "GB82WEST12345698765432"
+                    }
+                }`
+            }
+        };
+
         async function fetchPaymentTypes() {
-            const response = await fetch('/api/payment-types');
-            const paymentTypes = await response.json();
             const paymentTypeSelect = document.getElementById('paymentType');
             paymentTypes.forEach(type => {
                 const option = document.createElement('option');
@@ -23,6 +190,25 @@
                 option.text = type;
                 paymentTypeSelect.add(option);
             });
+        }
+
+        function updatePaymentInfo() {
+            const paymentType = document.getElementById('paymentType').value;
+            const info = paymentInfo[paymentType];
+
+            if (info) {
+                const infoDiv = document.getElementById('paymentInfo');
+                infoDiv.innerHTML = `
+                    <h2>${paymentType} Information</h2>
+                    <p>${info.description}</p>
+                    <h3>Correct Example</h3>
+                    <pre>${JSON.stringify(info.examples.correct, null, 2)}</pre>
+                    <h3>Incorrect Example</h3>
+                    <pre>${JSON.stringify(info.examples.incorrect, null, 2)}</pre>
+                    <h3>API Test Data</h3>
+                    <pre>${info.apiTest}</pre>
+                `;
+            }
         }
 
         async function submitPayment() {
@@ -33,7 +219,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ type, details })
+                body: JSON.stringify({ type, details: JSON.parse(details) })
             });
             const result = await response.json();
             if (result.valid) {
@@ -42,7 +228,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ type, details })
+                    body: JSON.stringify({ type, details: JSON.parse(details) })
                 });
                 alert('Payment submitted successfully');
             } else {
