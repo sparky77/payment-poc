@@ -23,35 +23,28 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         header {
-            background: #333;
+            background: #444;
             color: #fff;
             padding-top: 10px;
-            min-height: 50px;
-            border-bottom: #0779e4 3px solid;
+            min-height: 70px;
+            border-bottom: #ff6347 3px solid;
+            text-align: center;
         }
         header a {
             color: #fff;
             text-decoration: none;
             text-transform: uppercase;
-            font-size: 16px;
+            font-size: 18px;
         }
-        header li {
-            float: left;
-            display: inline;
-            padding: 0 20px 0 20px;
-        }
-        header #branding {
-            float: left;
-        }
-        header #branding h1 {
+        header h1 {
             margin: 0;
+            font-size: 36px;
         }
         header nav {
-            float: right;
             margin-top: 10px;
         }
         header .highlight, header .current a {
-            color: #0779e4;
+            color: #ff6347;
         }
         header a:hover {
             color: #ccc;
@@ -61,7 +54,7 @@
         }
         .button_1 {
             height: 50px;
-            background: #0779e4;
+            background: #ff6347;
             border: 0;
             padding-left: 20px;
             padding-right: 20px;
@@ -75,7 +68,7 @@
             transition: background 0.3s, box-shadow 0.3s;
         }
         .button_1:hover {
-            background: #005bb5;
+            background: #e5533d;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
         .dark {
@@ -86,15 +79,9 @@
             margin-bottom: 10px;
             border-radius: 5px;
         }
-        .highlight {
-            background-color: yellow;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 5px;
-        }
         h2 {
             font-size: 24px;
-            color: #0779e4;
+            color: #ff6347;
         }
         pre {
             background: #f4f4f4;
@@ -113,18 +100,25 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
+        .recipient-details {
+            display: none;
+            margin-top: 20px;
+        }
+        .recipient-details input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
     <header>
         <div class="container">
-            <div id="branding">
-                <h1>Payment POC</h1>
-            </div>
+            <h1>Payment POC</h1>
             <nav>
-                <ul>
-                    <li class="current"><a href="index.html">Home</a></li>
-                </ul>
+                <a href="index.html">Home</a>
             </nav>
         </div>
     </header>
@@ -152,6 +146,13 @@
                 <input type="text" id="accountNumber" placeholder="Account Number">
                 <input type="text" id="sortCode" placeholder="Sort Code">
                 <input type="text" id="iban" placeholder="IBAN">
+                <!-- Recipient Account Details -->
+                <div class="recipient-details">
+                    <h2>Recipient Account Details</h2>
+                    <input type="text" id="recipientAccountNumber" placeholder="Recipient Account Number">
+                    <input type="text" id="recipientSortCode" placeholder="Recipient Sort Code">
+                    <input type="text" id="recipientIBAN" placeholder="Recipient IBAN">
+                </div>
             </div>
             <button class="button_1" id="submitPayment">Submit Payment</button>
         </div>
@@ -255,6 +256,7 @@
             document.getElementById('paypalDetails').style.display = 'none';
             document.getElementById('bankTransferDetails').style.display = 'none';
             document.getElementById('paymentDetails').style.display = 'block';
+
             if (info) {
                 if (paymentType === "Credit Card") {
                     document.getElementById('creditCardDetails').style.display = 'block';
@@ -262,13 +264,14 @@
                     document.getElementById('paypalDetails').style.display = 'block';
                 } else if (paymentType === "Bank Transfer") {
                     document.getElementById('bankTransferDetails').style.display = 'block';
+                    document.querySelector('.recipient-details').style.display = 'block';
                 }
 
                 const infoDiv = document.getElementById('paymentInfo');
                 infoDiv.innerHTML = `
                     <h2>${paymentType} Information</h2>
                     <p>${info.description}</p>
-                    <div class="highlight">
+                    <div>
                         <h3>Correct Example</h3>
                         <pre>${JSON.stringify(info.examples.correct, null, 2)}</pre>
                         <h3>Incorrect Example</h3>
@@ -305,7 +308,10 @@
                 detailsObj = {
                     accountNumber: document.getElementById('accountNumber').value,
                     sortCode: document.getElementById('sortCode').value,
-                    IBAN: document.getElementById('iban').value
+                    IBAN: document.getElementById('iban').value,
+                    recipientAccountNumber: document.getElementById('recipientAccountNumber').value,
+                    recipientSortCode: document.getElementById('recipientSortCode').value,
+                    recipientIBAN: document.getElementById('recipientIBAN').value
                 };
             }
 
@@ -368,3 +374,4 @@
     </script>
 </body>
 </html>
+
