@@ -4,7 +4,13 @@ const creditCard = require('credit-card-validation');
 const iban = require('iban');
 const router = express.Router();
 
-let paymentTypes = ['Credit Card', 'PayPal', 'Bank Transfer'];
+const paymentTypes = [
+    "Credit Card",
+    "PayPal",
+    "Bank Transfer",
+    "Cheque",
+    "Batch File"
+];
 let paymentDetails = [];
 let transactions = {}; // Store transactions for demo purposes
 

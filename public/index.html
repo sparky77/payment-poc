@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,6 +14,7 @@
             background-size: cover;
             color: #333;
         }
+
         .container {
             width: 80%;
             margin: auto;
@@ -22,6 +24,7 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         header {
             background: #444;
             color: #fff;
@@ -30,28 +33,36 @@
             border-bottom: #ff6347 3px solid;
             text-align: center;
         }
+
         header a {
             color: #fff;
             text-decoration: none;
             text-transform: uppercase;
             font-size: 18px;
         }
+
         header h1 {
             margin: 0;
             font-size: 36px;
         }
+
         header nav {
             margin-top: 10px;
         }
-        header .highlight, header .current a {
+
+        header .highlight,
+        header .current a {
             color: #ff6347;
         }
+
         header a:hover {
             color: #ccc;
         }
+
         #main {
             padding: 20px;
         }
+
         .button_1 {
             height: 50px;
             background: #ff6347;
@@ -67,10 +78,12 @@
             cursor: pointer;
             transition: background 0.3s, box-shadow 0.3s;
         }
+
         .button_1:hover {
             background: #e5533d;
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
         }
+
         .dark {
             padding: 15px;
             background: #333;
@@ -79,30 +92,38 @@
             margin-bottom: 10px;
             border-radius: 5px;
         }
+
         h2 {
             font-size: 24px;
             color: #ff6347;
         }
+
         pre {
             background: #1d7e07;
             padding: 10px;
             border-radius: 5px;
             overflow-x: auto;
         }
+
         .payment-details {
             display: none;
             margin-top: 20px;
         }
-        .payment-details input {
+
+        .payment-details input,
+        .payment-details select {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
             border-radius: 5px;
             border: 1px solid #ccc;
+            box-sizing: border-box;
         }
+
         .payment-details input[title] {
             position: relative;
         }
+
         .payment-details input[title]:hover:after {
             content: attr(title);
             position: absolute;
@@ -114,10 +135,17 @@
             border-radius: 5px;
             white-space: nowrap;
         }
+
+        .amount-slider {
+            width: 80%;
+            margin: 10px 0;
+        }
+
         .recipient-details {
             display: none;
             margin-top: 20px;
         }
+
         .recipient-details input {
             width: 100%;
             padding: 10px;
@@ -125,11 +153,15 @@
             border-radius: 5px;
             border: 1px solid #ccc;
         }
-        .cheque-details, .batch-file-upload {
+
+        .cheque-details,
+        .batch-file-upload {
             display: none;
             margin-top: 20px;
         }
-        .cheque-details input, .batch-file-upload input {
+
+        .cheque-details input,
+        .batch-file-upload input {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -138,6 +170,7 @@
         }
     </style>
 </head>
+
 <body>
     <header>
         <div class="container">
@@ -155,29 +188,45 @@
             </select>
         </div>
         <div id="paymentDetails" class="payment-details">
-            <input type="text" id="amount" placeholder="Amount" title="Enter the amount to be transferred.">
+            <label for="amountSlider">Amount</label>
+            <input type="range" id="amountSlider" class="amount-slider" min="0" max="10000" step="0.01" value="0" oninput="updateAmount()">
+            <input type="text" id="amount" placeholder="Amount" readonly>
+            <select id="currency">
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <!-- Add more currencies as needed -->
+            </select>
             <!-- Credit Card Details -->
             <div id="creditCardDetails">
                 <input type="text" id="cardNumber" placeholder="Card Number" title="Enter your credit card number.">
-                <input type="text" id="expiryMonth" placeholder="Expiry Month (MM)" title="Enter the expiry month of your credit card.">
-                <input type="text" id="expiryYear" placeholder="Expiry Year (YYYY)" title="Enter the expiry year of your credit card.">
-                <input type="text" id="cvc" placeholder="CVC" title="Enter the CVC code found on the back of your credit card.">
+                <input type="text" id="expiryMonth" placeholder="Expiry Month (MM)"
+                    title="Enter the expiry month of your credit card.">
+                <input type="text" id="expiryYear" placeholder="Expiry Year (YYYY)"
+                    title="Enter the expiry year of your credit card.">
+                <input type="text" id="cvc" placeholder="CVC"
+                    title="Enter the CVC code found on the back of your credit card.">
             </div>
             <!-- PayPal Details -->
             <div id="paypalDetails">
-                <input type="email" id="paypalEmail" placeholder="PayPal Email" title="Enter your PayPal email address.">
+                <input type="email" id="paypalEmail" placeholder="PayPal Email"
+                    title="Enter your PayPal email address.">
             </div>
             <!-- Bank Transfer Details -->
             <div id="bankTransferDetails">
-                <input type="text" id="accountNumber" placeholder="Account Number" title="Enter your bank account number.">
+                <input type="text" id="accountNumber" placeholder="Account Number"
+                    title="Enter your bank account number.">
                 <input type="text" id="sortCode" placeholder="Sort Code" title="Enter your bank's sort code.">
                 <input type="text" id="iban" placeholder="IBAN" title="Enter your IBAN number.">
                 <!-- Recipient Account Details -->
                 <div class="recipient-details">
                     <h2>Recipient Account Details</h2>
-                    <input type="text" id="recipientAccountNumber" placeholder="Recipient Account Number" title="Enter the recipient's bank account number.">
-                    <input type="text" id="recipientSortCode" placeholder="Recipient Sort Code" title="Enter the recipient's bank sort code.">
-                    <input type="text" id="recipientIBAN" placeholder="Recipient IBAN" title="Enter the recipient's IBAN number.">
+                    <input type="text" id="recipientAccountNumber" placeholder="Recipient Account Number"
+                        title="Enter the recipient's bank account number.">
+                    <input type="text" id="recipientSortCode" placeholder="Recipient Sort Code"
+                        title="Enter the recipient's bank sort code.">
+                    <input type="text" id="recipientIBAN" placeholder="Recipient IBAN"
+                        title="Enter the recipient's IBAN number.">
                 </div>
             </div>
             <!-- Cheque Details -->
@@ -189,7 +238,8 @@
             </div>
             <!-- Batch File Upload -->
             <div id="batchFileUpload" class="batch-file-upload">
-                <input type="file" id="batchFile" accept=".csv, .json, .xml" title="Upload a batch file (CSV, JSON, XML).">
+                <input type="file" id="batchFile" accept=".csv, .json, .xml"
+                    title="Upload a batch file (CSV, JSON, XML).">
             </div>
             <button class="button_1" id="submitPayment">Submit Payment</button>
         </div>
@@ -199,7 +249,8 @@
         </div>
         <div id="transactionStatus" class="dark" style="display:none;">
             <h2>Transaction Status</h2>
-            <input type="text" id="transactionId" placeholder="Enter transaction ID" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc;">
+            <input type="text" id="transactionId" placeholder="Enter transaction ID"
+                style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc;">
             <button class="button_1" id="checkStatus">Check Status</button>
             <div id="statusResult"></div>
         </div>
@@ -545,10 +596,66 @@ XML:
             }
         }
 
+        function updateAmount() {
+    const slider = document.getElementById('amountSlider');
+    const amountInput = document.getElementById('amount');
+    amountInput.value = `${slider.value} ${document.getElementById('currency').value}`;
+}
+
+document.getElementById('currency').addEventListener('change', updateAmount);
+document.getElementById('amountSlider').addEventListener('input', updateAmount);
+
+// Ensure the payment details section is displayed when a payment type is selected
+function updatePaymentInfo() {
+    const paymentType = document.getElementById('paymentType').value;
+    const info = paymentInfo[paymentType];
+
+    document.getElementById('creditCardDetails').style.display = 'none';
+    document.getElementById('paypalDetails').style.display = 'none';
+    document.getElementById('bankTransferDetails').style.display = 'none';
+    document.getElementById('chequeDetails').style.display = 'none';
+    document.getElementById('batchFileUpload').style.display = 'none';
+    document.getElementById('paymentDetails').style.display = 'block';
+
+    if (info) {
+        if (paymentType === "Credit Card") {
+            document.getElementById('creditCardDetails').style.display = 'block';
+        } else if (paymentType === "PayPal") {
+            document.getElementById('paypalDetails').style.display = 'block';
+        } else if (paymentType === "Bank Transfer") {
+            document.getElementById('bankTransferDetails').style.display = 'block';
+            document.querySelector('.recipient-details').style.display = 'block';
+        } else if (paymentType === "Cheque") {
+            document.getElementById('chequeDetails').style.display = 'block';
+        } else if (paymentType === "Batch File") {
+            document.getElementById('batchFileUpload').style.display = 'block';
+        }
+
+        const infoDiv = document.getElementById('paymentInfo');
+        infoDiv.innerHTML = `
+            <h2>${paymentType} Information</h2>
+            <p>${info.description}</p>
+            <div>
+                <h3>Correct Example</h3>
+                <pre>${JSON.stringify(info.examples.correct, null, 2)}</pre>
+                <h3>Incorrect Example</h3>
+                <pre>${JSON.stringify(info.examples.incorrect, null, 2)}</pre>
+                <h3>API Test Data</h3>
+                <pre>${info.apiTest}</pre>
+                <h3>Postman/Insomnia Example</h3>
+                <pre>URL: https://payment-poc-production.up.railway.app/api/validate-payment</pre>
+                <pre>Method: POST</pre>
+                <pre>Body: ${info.apiTest}</pre>
+            </div>
+        `;
+    }
+}
+
         document.getElementById('submitPayment').addEventListener('click', submitPayment);
         document.getElementById('checkStatus').addEventListener('click', checkTransactionStatus);
 
         fetchPaymentTypes();
     </script>
 </body>
+
 </html>
