@@ -6,6 +6,7 @@ const router = express.Router();
 
 let paymentTypes = ['Credit Card', 'PayPal', 'Bank Transfer'];
 let paymentDetails = [];
+let transactions = {}; // Store transactions for demo purposes
 
 router.get('/payment-types', (req, res) => {
   res.json(paymentTypes);
@@ -73,9 +74,23 @@ router.post('/validate-payment', (req, res) => {
 router.post('/submit-payment', (req, res) => {
   const { type, details } = req.body;
 
+  // Generate a unique transaction ID (for demo purposes, use a simple counter)
+  const transactionId = `txn_${Date.now()}`;
+  transactions[transactionId] = { type, details, status: 'Pending' };
+
   // Assuming the payment details have already been validated
   paymentDetails.push({ type, details });
-  res.json({ success: true });
+  res.json({ success: true, transactionId });
+});
+
+router.get('/check-transaction-status/:transactionId', (req, res) => {
+  const { transactionId } = req.params;
+
+  if (transactions[transactionId]) {
+    res.json({ transactionId, status: transactions[transactionId].status });
+  } else {
+    res.status(404).json({ message: 'Transaction not found' });
+  }
 });
 
 module.exports = router;

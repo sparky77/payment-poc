@@ -15,12 +15,13 @@
             width: 80%;
             margin: auto;
             overflow: hidden;
+            padding: 20px;
         }
         header {
             background: #333;
             color: #fff;
-            padding-top: 30px;
-            min-height: 70px;
+            padding-top: 10px;
+            min-height: 50px;
             border-bottom: #0779e4 3px solid;
         }
         header a {
@@ -50,20 +51,6 @@
         header a:hover {
             color: #ccc;
         }
-        #showcase {
-            min-height: 400px;
-            background: url('showcase.jpg') no-repeat 0 -400px;
-            text-align: center;
-            color: #fff;
-        }
-        #showcase h1 {
-            margin-top: 100px;
-            font-size: 55px;
-            margin-bottom: 10px;
-        }
-        #showcase p {
-            font-size: 20px;
-        }
         #main {
             padding: 20px;
         }
@@ -81,6 +68,11 @@
             color: #fff;
             margin-top: 10px;
             margin-bottom: 10px;
+        }
+        .highlight {
+            background-color: yellow;
+            padding: 15px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -104,11 +96,17 @@
         </div>
         <div>
             <input type="text" id="paymentDetails" placeholder="Enter payment details">
-            <button class="button_1" onclick="submitPayment()">Submit Payment</button>
+            <button class="button_1" id="submitPayment">Submit Payment</button>
         </div>
         <div id="paymentInfo" class="dark">
             <h2>Payment Type Information</h2>
             <p>Select a payment type to see more information.</p>
+        </div>
+        <div id="transactionStatus" class="dark" style="display:none;">
+            <h2>Transaction Status</h2>
+            <input type="text" id="transactionId" placeholder="Enter transaction ID">
+            <button class="button_1" id="checkStatus">Check Status</button>
+            <div id="statusResult"></div>
         </div>
     </section>
     <script>
@@ -158,7 +156,7 @@
                 }`
             },
             "Bank Transfer": {
-                description: "Bank transfers involve transferring money directly from one bank account to another. It is often used for larger transactions.",
+                description: "Bank transfers involve transferring money directly from one bank account to another. It is often used for larger transactions. An IBAN (International Bank Account Number) is a standard international numbering system used to identify bank accounts across borders. It includes a country code, check digits, and a bank account number.",
                 examples: {
                     correct: {
                         accountNumber: "12345678",
@@ -201,26 +199,44 @@
                 infoDiv.innerHTML = `
                     <h2>${paymentType} Information</h2>
                     <p>${info.description}</p>
-                    <h3>Correct Example</h3>
-                    <pre>${JSON.stringify(info.examples.correct, null, 2)}</pre>
-                    <h3>Incorrect Example</h3>
-                    <pre>${JSON.stringify(info.examples.incorrect, null, 2)}</pre>
-                    <h3>API Test Data</h3>
-                    <pre>${info.apiTest}</pre>
+                    <div class="highlight">
+                        <h3>Correct Example</h3>
+                        <pre>${JSON.stringify(info.examples.correct, null, 2)}</pre>
+                        <h3>Incorrect Example</h3>
+                        <pre>${JSON.stringify(info.examples.incorrect, null, 2)}</pre>
+                        <h3>API Test Data</h3>
+                        <pre>${info.apiTest}</pre>
+                        <h3>Postman/Insomnia Example</h3>
+                        <pre>URL: https://payment-poc-production.up.railway.app/api/validate-payment</pre>
+                        <pre>Method: POST</pre>
+                        <pre>Body: ${info.apiTest}</pre>
+                    </div>
                 `;
             }
         }
 
-        async function submitPayment() {
+        async function submitPayment(event) {
+            event.preventDefault();  // Prevent the default form submission
+
             const type = document.getElementById('paymentType').value;
             const details = document.getElementById('paymentDetails').value;
+
+            let detailsObj;
+            try {
+                detailsObj = JSON.parse(details);  // Try to parse the details as JSON
+            } catch (error) {
+                alert('Please enter valid JSON for payment details.');
+                return;  // Stop the function execution if the JSON is invalid
+            }
+
             const response = await fetch('/api/validate-payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ type, details: JSON.parse(details) })
+                body: JSON.stringify({ type, details: detailsObj })
             });
+
             const result = await response.json();
             if (result.valid) {
                 await fetch('/api/submit-payment', {
@@ -228,13 +244,44 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ type, details: JSON.parse(details) })
+                    body: JSON.stringify({ type, details: detailsObj })
                 });
                 alert('Payment submitted successfully');
             } else {
                 alert('Invalid payment details');
             }
         }
+
+        async function checkTransactionStatus(event) {
+            event.preventDefault();
+
+            const transactionId = document.getElementById('transactionId').value;
+
+            const response = await fetch(`/api/check-transaction-status/${transactionId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+            const statusResultDiv = document.getElementById('statusResult');
+
+            if (response.ok) {
+                statusResultDiv.innerHTML = `
+                    <h3>Transaction Status</h3>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
+                `;
+            } else {
+                statusResultDiv.innerHTML = `
+                    <h3>Error</h3>
+                    <p>${result.message}</p>
+                `;
+            }
+        }
+
+        document.getElementById('submitPayment').addEventListener('click', submitPayment);
+        document.getElementById('checkStatus').addEventListener('click', checkTransactionStatus);
 
         fetchPaymentTypes();
     </script>
