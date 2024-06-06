@@ -93,9 +93,8 @@
             border-radius: 5px;
         }
 
-        h2 {
-            font-size: 24px;
-            color: #ff6347;
+        h1, h2, h3 {
+            color: #333;
         }
 
         pre {
@@ -140,6 +139,28 @@
             width: 80%;
             margin: 10px 0;
         }
+
+        .summary {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #e7e7e7;
+            border-radius: 10px;
+        }
+        .api-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .api-list li {
+            background: #fff;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .api-list li span {
+            font-weight: bold;
+        }
+
     </style>
 </head>
 
@@ -231,6 +252,46 @@
                 <div id="statusResult"></div>
             </div>
     </section>
+
+    <div class="summary" id="summary">
+        <h2>Project Overview</h2>
+        <p>This project is a Payment Proof of Concept (POC) application. It demonstrates how to process various types of payments, including Credit Card, PayPal, Bank Transfer, Cheque, and Batch File payments. The application is built using Express.js and includes validation and transaction management functionalities.</p>
+        
+        <h2>How It Works</h2>
+        <p>The application allows users to select a payment type, enter relevant payment details, and submit the payment. The payment details are validated, and transactions are managed through different statuses. Users can check the status of their transactions through the API.</p>
+        
+        <h2>Technologies Used</h2>
+        <ul>
+            <li>Express.js</li>
+            <li>Node.js</li>
+            <li>Validator</li>
+            <li>Card Validator</li>
+            <li>IBAN</li>
+            <li>Body-Parser</li>
+            <li>CORS</li>
+        </ul>
+        
+        <h2>API Endpoints</h2>
+        <ul class="api-list">
+            <li><span>GET /api/payment-types</span>: Retrieve a list of available payment types.</li>
+            <li><span>POST /api/validate-payment</span>: Validate payment details before submission.</li>
+            <li><span>POST /api/submit-payment</span>: Submit payment details and create a transaction.</li>
+            <li><span>GET /api/check-transaction-status/:transactionId</span>: Check the status of a specific transaction.</li>
+            <li><span>POST /api/update-transaction-status</span>: Update the status of a specific transaction.</li>
+        </ul>
+        
+        <h2>Included Libraries and Functions</h2>
+        <ul>
+            <li><strong>Express.js</strong>: Server-side framework for handling routing and middleware.</li>
+            <li><strong>Validator</strong>: Library for string validations (e.g., email, currency).</li>
+            <li><strong>Card Validator</strong>: Library for validating credit card information.</li>
+            <li><strong>IBAN</strong>: Library for validating IBANs.</li>
+            <li><strong>Body-Parser</strong>: Middleware for parsing incoming request bodies.</li>
+            <li><strong>CORS</strong>: Middleware for enabling Cross-Origin Resource Sharing.</li>
+        </ul>
+    </div>
+</div>
+
     <script>
         const paymentInfo = {
             "Credit Card": {

@@ -13,6 +13,10 @@ router.get('/payment-types', (req, res) => {
   res.json(paymentTypes);
 });
 
+router.get('/transaction-statuses', (req, res) => {
+  res.json(transactionStatuses);
+});
+
 router.post('/validate-payment', (req, res) => {
   const { type, details } = req.body;
 
