@@ -1,6 +1,6 @@
 const express = require('express');
 const validator = require('validator');
-const creditCard = require('credit-card-validation');
+const cardValidator = require('card-validator');
 const iban = require('iban');
 const router = express.Router();
 
@@ -24,19 +24,26 @@ router.post('/validate-payment', (req, res) => {
   if (type === 'Credit Card') {
     const { cardNumber, expiryMonth, expiryYear, cvc, amount } = details;
 
-    if (!creditCard.validateCardNumber(cardNumber)) {
+    const cardNumberValidation = cardValidator.number(cardNumber);
+    if (!cardNumberValidation.isValid) {
+      console.error('Invalid credit card number');
       return res.status(400).json({ valid: false, message: 'Invalid credit card number' });
     }
 
-    if (!creditCard.validateExpiry(expiryMonth, expiryYear)) {
+    const expiryValidation = cardValidator.expirationMonth(expiryMonth) && cardValidator.expirationYear(expiryYear);
+    if (!expiryValidation.isValid) {
+      console.error('Invalid expiry date');
       return res.status(400).json({ valid: false, message: 'Invalid expiry date' });
     }
 
-    if (!creditCard.validateCVC(cvc)) {
+    const cvcValidation = cardValidator.cvv(cvc);
+    if (!cvcValidation.isValid) {
+      console.error('Invalid CVC');
       return res.status(400).json({ valid: false, message: 'Invalid CVC' });
     }
 
     if (!validator.isCurrency(amount, { allow_negatives: false })) {
+      console.error('Invalid amount');
       return res.status(400).json({ valid: false, message: 'Invalid amount' });
     }
   }
@@ -94,13 +101,14 @@ router.post('/submit-payment', (req, res) => {
 });
 
 router.get('/check-transaction-status/:transactionId', (req, res) => {
-  const { transactionId } = req.params;
-
-  if (transactions[transactionId]) {
-    res.json({ transactionId, status: transactions[transactionId].status });
-  } else {
-    res.status(404).json({ message: 'Transaction not found' });
-  }
-});
+    const { transactionId } = req.params;
+  
+    if (transactions[transactionId]) {
+      res.json({ transactionId, status: transactions[transactionId].status });
+    } else {
+      console.error('Transaction not found:', transactionId);
+      res.status(404).json({ message: 'Transaction not found' });
+    }
+  });
 
 module.exports = router;
