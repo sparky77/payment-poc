@@ -5,6 +5,7 @@ const iban = require('iban');
 const router = express.Router();
 
 const paymentTypes = ['Credit Card', 'PayPal', 'Bank Transfer', 'Cheque', 'Batch File'];
+const transactionStatuses = ['Pending', 'Completed', 'Failed', 'Canceled', 'Under Review', 'Refunded'];
 const paymentDetails = [];
 const transactions = {}; // Store transactions for demo purposes
 
@@ -109,6 +110,24 @@ router.get('/check-transaction-status/:transactionId', (req, res) => {
       console.error('Transaction not found:', transactionId);
       res.status(404).json({ message: 'Transaction not found' });
     }
+  });
+
+  router.post('/update-transaction-status', (req, res) => {
+    const { transactionId, status } = req.body;
+  
+    if (!transactions[transactionId]) {
+      console.error('Transaction not found:', transactionId);
+      return res.status(404).json({ message: 'Transaction not found' });
+    }
+  
+    if (!transactionStatuses.includes(status)) {
+      console.error('Invalid status:', status);
+      return res.status(400).json({ message: 'Invalid status' });
+    }
+  
+    transactions[transactionId].status = status;
+    console.log(`Transaction ${transactionId} updated to status: ${status}`);
+    res.json({ success: true, transactionId, status });
   });
 
 module.exports = router;

@@ -160,9 +160,9 @@
             </select>
         </div>
         <div id="paymentDetails" class="payment-details">
-            <label for="amountSlider">Amount</label>
-            <input type="range" id="amountSlider" class="amount-slider" min="0" max="10000" step="0.01" value="0"
-                oninput="updateAmount()">
+            <label for="amountSlider">Amount:</label>
+            <input type="range" id="amountSlider" min="0" max="10000" step="10" value="1000" oninput="updateAmount()">
+            <input type="number" id="amount" readonly>
             <input type="text" id="amount" placeholder="Amount" readonly>
             <select id="currency">
                 <option value="USD">USD</option>
@@ -173,10 +173,14 @@
             <!-- Credit Card Details -->
             <div id="creditCardDetails">
                 <input type="text" id="cardNumber" placeholder="Card Number" title="Enter your credit card number.">
-                <input type="text" id="expiryMonth" placeholder="Expiry Month (MM)"
-                    title="Enter the expiry month of your credit card.">
-                <input type="text" id="expiryYear" placeholder="Expiry Year (YYYY)"
-                    title="Enter the expiry year of your credit card.">
+
+
+                <label for="expiryMonth">Expiry Month:</label>
+                <input type="number" id="expiryMonth" min="1" max="12" placeholder="MM">
+
+                <label for="expiryYear">Expiry Year:</label>
+                <input type="number" id="expiryYear" min="2023" max="2043" placeholder="YYYY">
+
                 <input type="text" id="cvc" placeholder="CVC"
                     title="Enter the CVC code found on the back of your credit card.">
             </div>
@@ -451,90 +455,103 @@
         document.getElementById('amountSlider').addEventListener('input', updateAmount);
 
         async function submitPayment(event) {
-    event.preventDefault();  // Prevent the default form submission
+            event.preventDefault();  // Prevent the default form submission
 
-    const type = document.getElementById('paymentType').value;
-    let detailsObj = {};
+            const type = document.getElementById('paymentType').value;
+            let detailsObj = {};
 
-    const amount = document.getElementById('amount').value; // Only amount without currency
-    const currency = document.getElementById('currency').value;
+            const amount = document.getElementById('amount').value; // Only amount without currency
+            const currency = document.getElementById('currency').value;
 
-    if (type === "Credit Card") {
-        detailsObj = {
-            cardNumber: document.getElementById('cardNumber').value,
-            expiryMonth: document.getElementById('expiryMonth').value,
-            expiryYear: document.getElementById('expiryYear').value,
-            cvc: document.getElementById('cvc').value,
-            amount: amount,
-            currency: currency
-        };
-    } else if (type === "PayPal") {
-        detailsObj = {
-            email: document.getElementById('paypalEmail').value,
-            amount: amount,
-            currency: currency
-        };
-    } else if (type === "Bank Transfer") {
-        detailsObj = {
-            accountNumber: document.getElementById('accountNumber').value,
-            sortCode: document.getElementById('sortCode').value,
-            IBAN: document.getElementById('iban').value,
-            recipientAccountNumber: document.getElementById('recipientAccountNumber').value,
-            recipientSortCode: document.getElementById('recipientSortCode').value,
-            recipientIBAN: document.getElementById('recipientIBAN').value,
-            amount: amount,
-            currency: currency
-        };
-    } else if (type === "Cheque") {
-        detailsObj = {
-            chequeNumber: document.getElementById('chequeNumber').value,
-            chequeBankCode: document.getElementById('chequeBankCode').value,
-            chequeAmount: amount,
-            currency: currency
-        };
-    } else if (type === "Batch File") {
-        const batchFile = document.getElementById('batchFile').files[0];
-        const fileType = batchFile.type;
-        const fileContent = await batchFile.text();
-        detailsObj = {
-            fileType: fileType,
-            fileContent: fileContent,
-            amount: amount,
-            currency: currency
-        };
-    }
+            if (type === "Credit Card") {
+                const expiryMonth = document.getElementById('expiryMonth').value;
+                const expiryYear = document.getElementById('expiryYear').value;
 
-    try {
-        const response = await fetch('/api/validate-payment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ type, details: detailsObj })
-        });
+                if (!validator.isInt(expiryMonth, { min: 1, max: 12 })) {
+                    alert('Invalid expiry month');
+                    return;
+                }
 
-        if (!response.ok) {
-            throw new Error(`Validation failed: ${response.statusText}`);
+                if (!validator.isInt(expiryYear, { min: new Date().getFullYear(), max: new Date().getFullYear() + 20 })) {
+                    alert('Invalid expiry year');
+                    return;
+                }
+
+                detailsObj = {
+                    cardNumber: document.getElementById('cardNumber').value,
+                    expiryMonth: expiryMonth,
+                    expiryYear: expiryYear,
+                    cvc: document.getElementById('cvc').value,
+                    amount: amount,
+                    currency: currency
+                };
+            } else if (type === "PayPal") {
+                detailsObj = {
+                    email: document.getElementById('paypalEmail').value,
+                    amount: amount,
+                    currency: currency
+                };
+            } else if (type === "Bank Transfer") {
+                detailsObj = {
+                    accountNumber: document.getElementById('accountNumber').value,
+                    sortCode: document.getElementById('sortCode').value,
+                    IBAN: document.getElementById('iban').value,
+                    recipientAccountNumber: document.getElementById('recipientAccountNumber').value,
+                    recipientSortCode: document.getElementById('recipientSortCode').value,
+                    recipientIBAN: document.getElementById('recipientIBAN').value,
+                    amount: amount,
+                    currency: currency
+                };
+            } else if (type === "Cheque") {
+                detailsObj = {
+                    chequeNumber: document.getElementById('chequeNumber').value,
+                    chequeBankCode: document.getElementById('chequeBankCode').value,
+                    chequeAmount: amount,
+                    currency: currency
+                };
+            } else if (type === "Batch File") {
+                const batchFile = document.getElementById('batchFile').files[0];
+                const fileType = batchFile.type;
+                const fileContent = await batchFile.text();
+                detailsObj = {
+                    fileType: fileType,
+                    fileContent: fileContent,
+                    amount: amount,
+                    currency: currency
+                };
+            }
+
+            try {
+                const response = await fetch('/api/validate-payment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ type, details: detailsObj })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Validation failed: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                if (result.valid) {
+                    const submitResponse = await fetch('/api/submit-payment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ type, details: detailsObj })
+                    });
+                    const submitResult = await submitResponse.json();
+                    alert(`Payment submitted successfully. Transaction ID: ${submitResult.transactionId}`);
+                } else {
+                    alert('Invalid payment details: ' + result.message);
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
         }
-
-        const result = await response.json();
-        if (result.valid) {
-            const submitResponse = await fetch('/api/submit-payment', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ type, details: detailsObj })
-            });
-            const submitResult = await submitResponse.json();
-            alert(`Payment submitted successfully. Transaction ID: ${submitResult.transactionId}`);
-        } else {
-            alert('Invalid payment details: ' + result.message);
-        }
-    } catch (error) {
-        alert('Error: ' + error.message);
-    }
-}
 
         async function checkTransactionStatus(event) {
             event.preventDefault();
